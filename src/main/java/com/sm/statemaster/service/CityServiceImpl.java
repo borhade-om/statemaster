@@ -11,14 +11,20 @@ import com.sm.statemaster.mapper.CityMapper;
 import com.sm.statemaster.repository.CityRepository;
 import com.sm.statemaster.repository.StateRepository;
 import com.sm.statemaster.specification.SpecificationHelper;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -109,5 +115,26 @@ public class CityServiceImpl implements CityService{
         Page<City> pagedata=cityRepository.findAll(citySpecification,pages);
         List<City> data=pagedata.getContent();
         return cityMapper.toListCity(data);
+    }
+
+    @Override
+    public String saveExcelImport(MultipartFile file) throws IOException {
+
+        Workbook workbook=new XSSFWorkbook(file.getInputStream());
+        Sheet sheet =workbook.getSheetAt(0);
+        sheet.forEach(row->{
+            if(row.getRowNum()!=0){
+                City city = new City();
+                city.setName(row.getCell(3).getStringCellValue());
+                String stateName=row.getCell(1).getStringCellValue();
+                State state = stateRepository.findByNameIgnoreCase(stateName).orElseThrow(()->new IllegalArgumentException("state name not found"));
+                if (state!=null){
+                    city.setState(state);
+                }
+                cityRepository.save(city);
+            }
+        });
+
+        return "data inserted successfully";
     }
 }

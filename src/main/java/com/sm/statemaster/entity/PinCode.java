@@ -36,7 +36,7 @@ public class PinCode {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "delete_at")
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     @UpdateTimestamp

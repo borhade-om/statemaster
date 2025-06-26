@@ -11,7 +11,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -80,5 +82,16 @@ public class PinCodeController {
         return new ResponseEntity<List<PinCodeDto>>(search, HttpStatus.OK);
     }
 
+    @PostMapping(value ="exceldata" ,consumes = "multipart/form-data ")
+    public  ResponseEntity<String> excelBulkUpload(@RequestParam("file") MultipartFile file) throws IOException {
+        String data = pinCodeService.saveExcelData(file);
+        return new ResponseEntity<String>(data,HttpStatus.OK);
+    }
+
+    @PostMapping(value ="pincodes/bulkupload" ,consumes = "multipart/form-data ")
+    public  ResponseEntity<String> PinCodeBulkUpload(@RequestParam("file") MultipartFile file) throws IOException {
+        String data = pinCodeService.pinCodeExcelImport(file);
+        return new ResponseEntity<String>(data,HttpStatus.OK);
+    }
 
 }

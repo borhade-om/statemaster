@@ -9,12 +9,17 @@ import com.sm.statemaster.mapper.StateMapper;
 import com.sm.statemaster.repository.StateRepository;
 import com.sm.statemaster.specification.SpecificationHelper;
 
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,5 +89,20 @@ public class StateServiceImpl implements StateService {
         Page<State> pageState = stateRepository.findAll(dtd, pages);
         List<State> pagedata = pageState.getContent();
         return pagedata.stream().map(data -> stateMapper.toDto(data)).collect(Collectors.toList());
+    }
+
+    @Override
+    public String stateExcelImport(MultipartFile file) throws IOException {
+
+        Workbook workbook=new XSSFWorkbook(file.getInputStream());
+        Sheet sheet=workbook.getSheetAt(0);
+        sheet.forEach(row->{
+            if(row.getRowNum()!=0){
+                State state=new State();
+                state.setName(row.getCell(0).getStringCellValue());
+                stateRepository .save(state);
+            }
+        });
+        return "data inserted successfully";
     }
 }

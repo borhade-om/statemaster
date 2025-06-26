@@ -5,7 +5,9 @@ import com.sm.statemaster.dto.city.CityDto;
 import com.sm.statemaster.dto.city.CitySearchDto;
 import com.sm.statemaster.dto.city.CityUpdateDto;
 import com.sm.statemaster.enums.CityStatus;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface CityService {
@@ -21,4 +23,7 @@ public interface CityService {
 
 
     List<CityDto> postSearchdata(Integer page, Integer pageSize, CitySearchDto citySearchDto);
+
+
+    String saveExcelImport(MultipartFile file) throws IOException;
 }

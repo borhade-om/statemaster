@@ -12,13 +12,19 @@ import com.sm.statemaster.repository.CityRepository;
 import com.sm.statemaster.repository.PinCodeRepository;
 import com.sm.statemaster.repository.StateRepository;
 import com.sm.statemaster.specification.SpecificationHelper;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -126,5 +132,74 @@ public class PinCodeServiceImpl implements PinCodeService {
         Page<PinCode> pageData=pinCodeRepository.findAll(pinCodeSpecification,pages);
         List<PinCode> search=pageData.getContent();
         return pinCodeMapper.toListDto(search);
+    }
+
+    @Override
+    public String saveExcelData(MultipartFile file) throws IOException {
+        Workbook workbook= new XSSFWorkbook(file.getInputStream());
+
+        Sheet sheet=workbook.getSheetAt(0);
+
+        sheet.forEach(row->{
+            if(row.getRowNum()!=0){
+                String stateName=row.getCell(1).getStringCellValue();
+                String cityName=row.getCell(2).getStringCellValue();
+                Long pincode= (long) row.getCell(0).getNumericCellValue();
+
+                State state=  stateRepository.findByNameIgnoreCase(stateName)
+                        .orElseGet(()->{
+                            State newstate=new State();
+                            newstate.setName(stateName);
+                           return stateRepository.save(newstate);
+                        });
+
+                City city= cityRepository.findByNameIgnoreCase(cityName)
+                        .orElseGet(()->{
+                            City cities=new City();
+                            cities.setName(cityName);
+                            cities.setState(state);
+                            return cityRepository.save(cities);
+
+                        });
+
+                PinCode pincodes=pinCodeRepository.findByPinCode(pincode)
+                        .orElseGet(()->{
+                            PinCode pin=new PinCode();
+                            pin.setPinCode(pincode);
+                            pin.setStates(state);
+                            pin.setCities(city);
+                            return pinCodeRepository.save(pin);
+                        });
+
+
+
+            }
+        });
+        return "data Inserted successfully";
+    }
+
+    @Override
+    public String pinCodeExcelImport(MultipartFile file) throws IOException {
+        Workbook workbook=new XSSFWorkbook(file.getInputStream());
+        Sheet sheet =workbook.getSheetAt(0);
+        sheet.forEach(row->{
+            if (row.getRowNum()!=0){
+                PinCode pincode=new PinCode();
+                pincode.setPinCode((long) row.getCell(0).getNumericCellValue());
+                String cityname=row.getCell(2).getStringCellValue();
+                String statename=row.getCell(1).getStringCellValue();
+                State state = stateRepository.findByNameIgnoreCase(statename).orElseThrow(()->new IllegalArgumentException("state name not found"));
+                if (state!=null){
+                    pincode.setStates(state);
+                }
+                City city=cityRepository.findByNameIgnoreCase(cityname).orElseThrow(()->new IllegalArgumentException("city id not found"));
+                if (city!=null){
+                    pincode.setCities(city);
+                }
+
+                pinCodeRepository.save(pincode);
+            }
+        });
+        return "data inserted successfully";
     }
 }

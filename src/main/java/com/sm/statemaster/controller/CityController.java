@@ -12,7 +12,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 @RestController
 @RequestMapping("/api/v1")
@@ -92,6 +94,13 @@ public class CityController {
     public ResponseEntity<String> deleteCityById(@PathVariable Long cityId){
         String response=cityService.deleteCity(cityId);
         return  new ResponseEntity<String>(response,HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/cities/bulkupload" ,consumes = "multipart/form-data")
+    public ResponseEntity<String> cityBulkupload(@RequestParam("file") MultipartFile file) throws IOException {
+        String data=cityService.saveExcelImport(file);
+        return new ResponseEntity<String>(data,HttpStatus.OK);
+
     }
 
 

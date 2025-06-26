@@ -1,7 +1,7 @@
-ALTER TABLE state
-RENAME COLUMN name TO state_name;
-
-
-ALTER TABLE city
-RENAME COLUMN name TO City_name;
-
+--ALTER TABLE state
+--RENAME COLUMN name TO state_name;
+--
+--
+--ALTER TABLE city
+--RENAME COLUMN name TO City_name;
+--
