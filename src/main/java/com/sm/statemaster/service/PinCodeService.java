@@ -4,6 +4,7 @@ import com.sm.statemaster.dto.pincode.PinCodeCreateDto;
 import com.sm.statemaster.dto.pincode.PinCodeDto;
 import com.sm.statemaster.dto.pincode.PinCodeSearchDto;
 import com.sm.statemaster.enums.PinCodeStatus;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -26,4 +27,6 @@ public interface PinCodeService {
     String saveExcelData(MultipartFile file) throws IOException;
 
     String pinCodeExcelImport(MultipartFile file) throws IOException;
+
+    void exportPinCodeData(HttpServletResponse response) throws IOException;
 }

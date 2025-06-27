@@ -7,6 +7,7 @@ import com.sm.statemaster.enums.PinCodeStatus;
 import com.sm.statemaster.service.PinCodeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -92,6 +93,10 @@ public class PinCodeController {
     public  ResponseEntity<String> PinCodeBulkUpload(@RequestParam("file") MultipartFile file) throws IOException {
         String data = pinCodeService.pinCodeExcelImport(file);
         return new ResponseEntity<String>(data,HttpStatus.OK);
+    }
+    @GetMapping("/pincodes/export")
+    public void pinCodeExport(HttpServletResponse response) throws IOException {
+        pinCodeService.exportPinCodeData(response);
     }
 
 }

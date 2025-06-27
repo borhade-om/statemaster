@@ -5,6 +5,7 @@ import com.sm.statemaster.dto.city.CityDto;
 import com.sm.statemaster.dto.city.CitySearchDto;
 import com.sm.statemaster.dto.city.CityUpdateDto;
 import com.sm.statemaster.enums.CityStatus;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -26,4 +27,6 @@ public interface CityService {
 
 
     String saveExcelImport(MultipartFile file) throws IOException;
+
+    void exportCityData(HttpServletResponse response) throws IOException;
 }

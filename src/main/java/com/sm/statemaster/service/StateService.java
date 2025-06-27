@@ -4,6 +4,7 @@ import com.sm.statemaster.dto.state.StateCreateDto;
 import com.sm.statemaster.dto.state.StateDto;
 import com.sm.statemaster.dto.state.StateSearchDto;
 import com.sm.statemaster.enums.StateStatus;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -25,4 +26,6 @@ public interface StateService {
     List<StateDto> postSearchData(Integer page, Integer pageSize, StateSearchDto stateSearchDto);
 
     String stateExcelImport(MultipartFile file) throws IOException;
+
+    void exportStateData(HttpServletResponse response) throws IOException;
 }

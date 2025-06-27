@@ -8,6 +8,7 @@ import com.sm.statemaster.enums.CityStatus;
 import com.sm.statemaster.service.CityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -101,6 +102,11 @@ public class CityController {
         String data=cityService.saveExcelImport(file);
         return new ResponseEntity<String>(data,HttpStatus.OK);
 
+    }
+
+    @GetMapping("cities/export")
+    public void cityExport(HttpServletResponse response) throws IOException {
+        cityService.exportCityData(response);
     }
 
 

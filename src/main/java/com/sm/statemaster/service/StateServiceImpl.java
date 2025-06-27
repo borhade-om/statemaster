@@ -9,8 +9,8 @@ import com.sm.statemaster.mapper.StateMapper;
 import com.sm.statemaster.repository.StateRepository;
 import com.sm.statemaster.specification.SpecificationHelper;
 
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -104,5 +104,37 @@ public class StateServiceImpl implements StateService {
             }
         });
         return "data inserted successfully";
+    }
+
+    @Override
+    public void exportStateData(HttpServletResponse response) throws IOException {
+        List<State> alldata = stateRepository.findAll();
+        Workbook workbook=new XSSFWorkbook();
+        Sheet sheet =workbook.createSheet("stateData");
+
+        String[] columns={"State Id","State Name"};
+        Font headerFont= workbook.createFont();
+        headerFont.setBold(true);
+        CellStyle headerStyle= workbook.createCellStyle();
+        headerStyle.setFont(headerFont);
+
+        Row headerRow=sheet.createRow(0);
+        for(int i=0;i<columns.length;i++){
+            Cell cell=headerRow.createCell(i);
+            cell.setCellValue(columns[i]);
+            cell.setCellStyle(headerStyle);
+        }
+
+        int index=1;
+        for(State state:alldata){
+            Row row=sheet.createRow(index++);
+            row.createCell(0).setCellValue(state.getStateId());
+            row.createCell(1).setCellValue(state.getName());
+
+        }
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition","attachment;filename=states.xlsx");
+        workbook.write(response.getOutputStream());
+        workbook.close();
     }
 }

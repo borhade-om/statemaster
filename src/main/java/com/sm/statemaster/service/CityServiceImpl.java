@@ -11,8 +11,8 @@ import com.sm.statemaster.mapper.CityMapper;
 import com.sm.statemaster.repository.CityRepository;
 import com.sm.statemaster.repository.StateRepository;
 import com.sm.statemaster.specification.SpecificationHelper;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -136,5 +136,38 @@ public class CityServiceImpl implements CityService{
         });
 
         return "data inserted successfully";
+    }
+
+    @Override
+    public void exportCityData(HttpServletResponse response) throws IOException {
+        List<City> cityData = cityRepository.findAll();
+        Workbook workbook=new XSSFWorkbook();
+        Sheet sheet=workbook.createSheet();
+        String[] Columns={"City Id","City Name","State Name"};
+        Font headerFont=workbook.createFont();
+        headerFont.setBold(true);
+        CellStyle headerStyle=workbook.createCellStyle();
+        headerStyle.setFont(headerFont);
+
+        Row headerRow=sheet.createRow(0);
+        for (int i=0;i<Columns.length;i++){
+            Cell cell=headerRow.createCell(i);
+            cell.setCellValue(Columns[i]);
+            cell.setCellStyle(headerStyle);
+        }
+
+        int index=1;
+        for(City city:cityData){
+            Row row=sheet.createRow(index++);
+            row.createCell(0).setCellValue(city.getCityId());
+            row.createCell(1).setCellValue(city.getName());
+//            String stateName=city.getState() !=null?city.getState().getName():"N/A";
+            row.createCell(3).setCellValue(city.getState().getName());
+        }
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("content-disposition","attachment; filename=cities.xlsx");
+        workbook.write(response.getOutputStream());
+        workbook.close();
     }
 }

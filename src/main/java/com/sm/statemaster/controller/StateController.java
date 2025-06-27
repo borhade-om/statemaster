@@ -7,6 +7,7 @@ import com.sm.statemaster.enums.StateStatus;
 import com.sm.statemaster.service.StateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -104,6 +105,11 @@ public class StateController {
         String data=stateService.stateExcelImport(file);
         return new ResponseEntity<String>(data,HttpStatus.OK);
 
+    }
+
+    @GetMapping("/states/export")
+    public void stateExport(HttpServletResponse response) throws IOException {
+        stateService.exportStateData(response);
     }
 
 
