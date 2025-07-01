@@ -38,6 +38,8 @@ public class PinCodeServiceImpl implements PinCodeService {
 
     private PinCodeMapper pinCodeMapper;
 
+    private final Integer BATCHCOUNT=1000;
+
     public PinCodeServiceImpl(PinCodeRepository pinCodeRepository, CityRepository cityRepository, StateRepository stateRepository, PinCodeMapper pinCodeMapper) {
         this.pinCodeRepository = pinCodeRepository;
         this.cityRepository = cityRepository;

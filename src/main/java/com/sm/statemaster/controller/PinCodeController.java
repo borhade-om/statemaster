@@ -9,11 +9,17 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -23,6 +29,11 @@ import java.util.List;
 public class PinCodeController {
 
     private PinCodeService pinCodeService;
+
+    @Autowired
+    private JobLauncher jobLauncher;
+    @Autowired
+    private Job pinCodeJob;
 
     public PinCodeController(PinCodeService pinCodeService) {
         this.pinCodeService = pinCodeService;
@@ -97,6 +108,22 @@ public class PinCodeController {
     @GetMapping("/pincodes/export")
     public void pinCodeExport(HttpServletResponse response) throws IOException {
         pinCodeService.exportPinCodeData(response);
+    }
+
+
+    @PostMapping(value = "/batch/import",consumes = "multipart/form-data" )
+    public String importExcel(@RequestParam("file") MultipartFile file) throws Exception {
+        File tempFile = File.createTempFile("product", ".xlsx");
+        file.transferTo(tempFile);
+
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addString("filePath", tempFile.getAbsolutePath())
+                .addLong("timestamp", System.currentTimeMillis())
+                .toJobParameters();
+
+        jobLauncher.run(pinCodeJob, jobParameters);
+        return "Batch Job Started!";
+
     }
 
 }
