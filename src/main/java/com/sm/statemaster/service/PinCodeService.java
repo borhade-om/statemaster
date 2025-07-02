@@ -29,4 +29,6 @@ public interface PinCodeService {
     String pinCodeExcelImport(MultipartFile file) throws IOException;
 
     void exportPinCodeData(HttpServletResponse response) throws IOException;
+
+     void saveItemProcess(PinCodeSearchDto dto);
 }

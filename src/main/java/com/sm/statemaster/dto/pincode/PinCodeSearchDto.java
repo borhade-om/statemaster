@@ -67,6 +67,12 @@ public class PinCodeSearchDto {
 
     }
 
+    public PinCodeSearchDto(Long pincode, String cityName, String stateName) {
+        this.pincode = pincode;
+        this.cityName = cityName;
+        this.stateName = stateName;
+    }
+
     public PinCodeSearchDto() {
     }
 }

@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -235,5 +236,31 @@ public class PinCodeServiceImpl implements PinCodeService {
 
         workbook.write(response.getOutputStream());
         workbook.close();
+    }
+
+    public void saveItemProcess(PinCodeSearchDto dto){
+        State states = stateRepository.findByNameIgnoreCase(dto.getStateName()).orElseGet(() -> {
+                    State state = new State();
+                    state.setName(dto.getStateName());
+                    return stateRepository.save(state);
+                }
+        );
+
+        City cities=cityRepository.findByNameIgnoreCase(dto.getCityName()).orElseGet(()->{
+            City city=new City();
+            city.setState(states);
+            city.setName(dto.getCityName());
+            return cityRepository.save(city);
+        });
+        Optional<PinCode> pincodes=pinCodeRepository.findByPinCode(dto.getPincode());
+        PinCode pin=new PinCode();
+        if(pincodes.isEmpty()){
+            pin.setPinCode(dto.getPincode());
+            pin.setStates(states);
+            pin.setCities(cities);
+        }
+
+      pinCodeRepository.save(pin);
+
     }
 }
