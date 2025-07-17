@@ -3,6 +3,7 @@ package com.sm.statemaster.service;
 import com.sm.statemaster.dto.pincode.PinCodeCreateDto;
 import com.sm.statemaster.dto.pincode.PinCodeDto;
 import com.sm.statemaster.dto.pincode.PinCodeSearchDto;
+import com.sm.statemaster.entity.PinCode;
 import com.sm.statemaster.enums.PinCodeStatus;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,5 +31,8 @@ public interface PinCodeService {
 
     void exportPinCodeData(HttpServletResponse response) throws IOException;
 
-     void saveItemProcess(PinCodeSearchDto dto);
+    void saveItemProcess(PinCodeSearchDto dto);
+
+//    void saveAllPinCodes(List<PinCode> Pin);
+
 }

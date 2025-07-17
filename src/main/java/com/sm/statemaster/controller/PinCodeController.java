@@ -125,5 +125,16 @@ public class PinCodeController {
         return "Batch Job Started!";
 
     }
+//@PostMapping(value = "pincode/import", consumes = "multipart/form-data")
+//public String importData(@RequestParam("file") MultipartFile file) throws Exception {
+//    File tempfile = File.createTempFile("product", ".xlsx");
+//    file.transferTo(tempfile);
+//    JobParameters jobParameters = new JobParametersBuilder()
+//            .addString("filePath", tempfile.getAbsolutePath())
+//            .addLong("timestamp", System.currentTimeMillis())
+//            .toJobParameters();
+//    jobLauncher.run(pinCodeJob, jobParameters);
+//    return null;
+//}
 
 }

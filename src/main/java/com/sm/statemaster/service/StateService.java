@@ -5,6 +5,7 @@ import com.sm.statemaster.dto.state.StateDto;
 import com.sm.statemaster.dto.state.StateSearchDto;
 import com.sm.statemaster.enums.StateStatus;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

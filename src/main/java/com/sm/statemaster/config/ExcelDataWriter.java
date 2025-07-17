@@ -10,18 +10,20 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+
 @Component
 public class ExcelDataWriter implements ItemWriter<PinCodeSearchDto> {
 //    @Autowired
 //    private PinCodeRepository pinCodeRepository;
-    @Autowired
-    private PinCodeService pinCodeService;
+     @Autowired
+     private PinCodeService pinCodeService;
+
     @Override
     public void write(Chunk<? extends PinCodeSearchDto> chunk) throws Exception {
-//            pinCodeRepository.saveAll(chunk);
-        for(PinCodeSearchDto dto:chunk){
-            pinCodeService.saveItemProcess(dto);
-        }
+           for (PinCodeSearchDto dto:chunk){
+               pinCodeService.saveItemProcess(dto);
+           }
 
     }
 }

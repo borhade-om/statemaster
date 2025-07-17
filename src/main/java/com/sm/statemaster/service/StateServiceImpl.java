@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,6 +45,7 @@ public class StateServiceImpl implements StateService {
                 .map(stateData -> stateMapper.toDto(stateData)).collect(Collectors.toList());
     }
 
+    @Scheduled(initialDelay = 5000)  
     @Override
     public String inserIntoState(StateCreateDto stateCreateDto) {
         State state = stateMapper.toEntity(stateCreateDto);

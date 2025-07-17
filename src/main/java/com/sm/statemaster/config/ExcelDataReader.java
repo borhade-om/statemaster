@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
-import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -35,7 +34,6 @@ public class ExcelDataReader implements ItemReader<PinCodeSearchDto> {
         Sheet sheet = workbook.getSheetAt(0);
         this.rowIterator = sheet.iterator();
         this.rowIterator.next();
-
     }
 
 
@@ -58,12 +56,12 @@ public class ExcelDataReader implements ItemReader<PinCodeSearchDto> {
             int rowNum = row.getRowNum();
 
             try {
-                Cell stateCell = row.getCell(0);
-                Cell cityCell = row.getCell(1);
-                Cell pincodeCell = row.getCell(2);
+                Cell stateCell = row.getCell(1);
+                Cell cityCell = row.getCell(2);
+                Cell pincodeCell = row.getCell(0);
 
                 if (stateCell == null || cityCell == null || pincodeCell == null) {
-                    System.err.println("⚠️ Skipping row " + rowNum + ": Missing required cell");
+                    System.err.println(" Skipping row " + rowNum + ": Missing required cell");
                     continue;
                 }
 
@@ -72,7 +70,7 @@ public class ExcelDataReader implements ItemReader<PinCodeSearchDto> {
                 Long pincode = (long) pincodeCell.getNumericCellValue();
 
                 if (stateName.isEmpty() || cityName.isEmpty()) {
-                    System.err.println("⚠️ Skipping row " + rowNum + ": Empty state or city");
+                    System.err.println("Skipping row " + rowNum + ": Empty state or city");
                     continue;
                 }
 
@@ -85,6 +83,6 @@ public class ExcelDataReader implements ItemReader<PinCodeSearchDto> {
             }
         }
 
-        return null; // no more rows
+            return null; // no more rows
     }
 }
