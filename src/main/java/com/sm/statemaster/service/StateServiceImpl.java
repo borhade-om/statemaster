@@ -45,7 +45,7 @@ public class StateServiceImpl implements StateService {
                 .map(stateData -> stateMapper.toDto(stateData)).collect(Collectors.toList());
     }
 
-    @Scheduled(initialDelay = 5000)  
+
     @Override
     public String inserIntoState(StateCreateDto stateCreateDto) {
         State state = stateMapper.toEntity(stateCreateDto);

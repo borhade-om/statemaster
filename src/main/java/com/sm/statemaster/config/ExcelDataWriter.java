@@ -13,17 +13,13 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 
 @Component
-public class ExcelDataWriter implements ItemWriter<PinCodeSearchDto> {
-//    @Autowired
-//    private PinCodeRepository pinCodeRepository;
-     @Autowired
-     private PinCodeService pinCodeService;
+public class ExcelDataWriter implements ItemWriter<PinCode> {
+    @Autowired
+    private PinCodeRepository pinCodeRepository;
+
 
     @Override
-    public void write(Chunk<? extends PinCodeSearchDto> chunk) throws Exception {
-           for (PinCodeSearchDto dto:chunk){
-               pinCodeService.saveItemProcess(dto);
-           }
-
+    public void write(Chunk<? extends PinCode> chunk) throws Exception {
+             pinCodeRepository.saveAll(chunk);
     }
 }

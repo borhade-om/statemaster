@@ -25,8 +25,8 @@ import java.util.Iterator;
 @Component
 @StepScope
 public class ExcelDataReader implements ItemReader<PinCodeSearchDto> {
-    private final Iterator<Row> rowIterator;
 
+    private final Iterator<Row> rowIterator;
 
     public ExcelDataReader(@Value("#{jobParameters['filePath']}") String filepath) throws IOException {
         InputStream inputStream = new FileInputStream(filepath);

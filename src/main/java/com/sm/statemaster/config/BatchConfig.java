@@ -39,11 +39,12 @@ public class BatchConfig {
     public Step step(JobRepository jobRepository,
                      PlatformTransactionManager transactionManager,
                      ItemReader<PinCodeSearchDto> reader,
-//                     ItemProcessor<PinCodeSearchDto,PinCodeSearchDto> process,
-                     ItemWriter<PinCodeSearchDto> writer) {
+                     ItemProcessor<PinCodeSearchDto,PinCode> process,
+                     ItemWriter<PinCode> writer) {
         return new StepBuilder("step", jobRepository)
-                .<PinCodeSearchDto, PinCodeSearchDto>chunk(1000, transactionManager) // CHUNK CONFIGURED HERE
+                .<PinCodeSearchDto, PinCode>chunk(1000, transactionManager) // CHUNK CONFIGURED HERE
                 .reader(reader)
+                .processor(process)
                 .writer(writer)
                 .build();
     }
